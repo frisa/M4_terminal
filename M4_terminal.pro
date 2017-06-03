@@ -4,7 +4,7 @@ QT += qml quick serialport
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    roothandler.cpp
+    solution.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,4 +31,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    roothandler.h
+    solution.h
+
+DISTFILES +=

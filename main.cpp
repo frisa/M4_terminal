@@ -3,7 +3,10 @@
 #include <QQuickWindow>
 #include <QDebug>
 
-#include "roothandler.h"
+#include <QStringListModel>
+#include <QQmlContext>
+
+#include "solution.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,12 +14,20 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QObject *rootObject;
     QWindow *rootWindow;
-    RootHandler rootHdl;
+
+    QQmlContext * rootContext;
+    QStringListModel strModel;
+    Solution * sln = new Solution(&strModel);
+
+    // set the root context
+    rootContext = engine.rootContext();
+    rootContext->setContextProperty("slnModel", &strModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    // set the root object
     rootObject = engine.rootObjects().value(0);
     rootWindow = qobject_cast<QQuickWindow *>(rootObject);
-    QObject::connect(rootWindow, SIGNAL(solutionClicked()), &rootHdl, SLOT(handleButtonSlot()));
+    QObject::connect(rootWindow, SIGNAL(loadClicked()), sln, SLOT(load()));
 
     return app.exec();
 }
