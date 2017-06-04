@@ -1,5 +1,6 @@
 #include "solution.h"
 #include <QtSerialPort/QtSerialPort>
+#include <QTime>
 
 Solution::Solution(QObject *parent) : QObject(parent)
 {
@@ -27,6 +28,7 @@ void Solution::load()
     QStringList logList;
     QByteArray ba;
     qint64 bytesWritten;
+    QTime t;
 
     serialPort.setPortName("/dev/ttyACM0");
     serialPort.setBaudRate(QSerialPort::Baud115200);
@@ -42,19 +44,30 @@ void Solution::load()
         logList << QString("The serial port has been connected sucessfuly");
     }
 
-    ba.resize(8);
-    ba[0] = 3;
-    ba[1] = 2;
+    ba.resize(15);
+    ba[0] = 15;
+    ba[1] = 0;
     ba[2] = 0x21; // command DOWNLOAD
     ba[3] = 0x00;
     ba[4] = 0x00;
     ba[5] = 0x00;
-    ba[6] = 0x20;
-    ba[7] = 123;
+    ba[6] = 0x44;
+
+    ba[7] = 0x00;
+    ba[8] = 0x00;
+    ba[9] = 0x00;
+    ba[10] = 0x04;
+
+    for (int i=1; i<ba[10]; i++)
+    {
+        ba[10+i] = i+1;
+    }
+    ba[10+ba[10]] = 0xff;
     logList << QString("Sending data to serial interface");
     for (int i=0; i<8; i++)
     {
-        logList << QString("data[%1] = %2").arg(i).arg(ba[i]);
+        int byte = ba[i];
+        logList << QString("data[%1] = %2").arg(i).arg(byte);
     }
 
     bytesWritten = serialPort.write(ba);
@@ -67,7 +80,8 @@ void Solution::load()
         }
     else
     {
-
+        logList << QString("Data sent to serial interface");
+        logList << t.currentTime().toString();
         qDebug("Data sent to serial interface\n");
     }
     m_model->setStringList(logList);
