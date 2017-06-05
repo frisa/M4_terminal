@@ -11,6 +11,7 @@ ApplicationWindow {
     title: qsTr("M4 Terminal")
 
     signal loadClicked()
+    signal loadElfClicked()
 
     background: Rectangle{
         gradient: Gradient{
@@ -31,6 +32,19 @@ ApplicationWindow {
                 height: 29
                 JxButton
                 {
+                    text: "Load ELF file"
+                    anchors.fill: parent
+                    onClicked: {
+                        mainStack.push(viewElf)
+                        console.log("show load the elf file")
+                    }
+                }
+            }
+            Rectangle{
+                width: 80
+                height: 29
+                JxButton
+                {
                     text: "Serial Port"
                     anchors.fill: parent
                     onClicked: {
@@ -45,7 +59,7 @@ ApplicationWindow {
                 height: 29
                 JxButton
                 {
-                    text: "Load"
+                    text: "Ethernet"
                     anchors.fill: parent
                     onClicked: {
                         mainStack.push(viewLoad)
@@ -59,11 +73,24 @@ ApplicationWindow {
                 height: 29
                 JxButton
                 {
-                    text: "Unload"
+                    text: "Help"
                     anchors.fill: parent
                     onClicked: {
                         mainStack.push(viewUnload)
-                        console.log("show serial port view")
+                        console.log("show help")
+                    }
+                }
+            }
+            Rectangle{
+                width: 80
+                height: 29
+                JxButton
+                {
+                    text: "Quit"
+                    anchors.fill: parent
+                    onClicked: {
+                        mainStack.push(viewUnload)
+                        console.log("show quit")
                     }
                 }
             }
@@ -76,7 +103,7 @@ ApplicationWindow {
 
     StackView {
         id: mainStack
-        initialItem: viewSerial
+        initialItem: viewElf
         anchors.fill: parent
     }
 
@@ -94,6 +121,11 @@ ApplicationWindow {
                 RowLayout{
                     spacing: 5
                     Text{text: "Serial Port"; color: "white"}
+                    ComboBox {
+                            textRole: "display"
+                            width: 200
+                            model: comModel
+                        }
                     TextField{placeholderText: qsTr("Enter the serial port name"); height: 25}
                     JxButton
                     {
@@ -105,8 +137,8 @@ ApplicationWindow {
                     }
                 }
                 Rectangle{
-                    height: 250
-                    width:  300
+                    height: mainStack.height
+                    width:  applicationWindow.width
 
                     color: "white"
                     ListView{
@@ -134,11 +166,37 @@ ApplicationWindow {
         }
     }
     Component{
-        id: viewLoad
+        id: viewElf
         Rectangle{
-            width: 100
-            height: 80
-            color: "blue"
+            color: "#49575f"
+            ColumnLayout{
+                RowLayout{
+                    Text{text: "ELF File"; color: "white"}
+                    ComboBox{model: elfModel; displayText: name}
+                    Button{text: "Browse"}
+                    Button{text: "Load"
+                    onClicked: applicationWindow.loadElfClicked()
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width
+                    height: 300
+                    ListView{
+                        width: parent.width
+                        height: 300
+                        model: elfModel
+                        delegate: Component{
+                            Rectangle{
+                                Text{
+                                    color: "white"
+                                    text: "|" + name + "|" + abi + "|" + sclass + "|" + dformat
+                                }
+                            }
+                        }
+                }
+               }
+            }
         }
     }
     Component{

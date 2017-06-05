@@ -4,7 +4,9 @@ QT += qml quick serialport
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    solution.cpp
+    solution.cpp \
+    commanager.cpp \
+    elfmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,6 +33,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    solution.h
+    solution.h \
+    commanager.h \
+    elfmodel.h
 
 DISTFILES +=
