@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QObject *rootObject;
     QWindow *rootWindow;
+    QString sLog = "The logged information will be there";
 
     QQmlContext * rootContext;
     QStringListModel strModel;
@@ -40,6 +41,10 @@ int main(int argc, char *argv[])
     rootWindow = qobject_cast<QQuickWindow *>(rootObject);
     QObject::connect(rootWindow, SIGNAL(loadClicked()), sln, SLOT(load()));
     QObject::connect(rootWindow, SIGNAL(loadClicked()), sln, SLOT(load()));
+
+    QObject *rect = rootObject->findChild<QObject*>("logWindow");
+    if (rect)
+        rect->setProperty("text", elfModel.m_log);
 
     return app.exec();
 }

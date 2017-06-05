@@ -33,6 +33,11 @@ ElfListModel::ElfListModel(QObject *parent)
 {
 }
 
+void ElfListModel::log(QString message)
+{
+    m_log = m_log+ message + "\n";
+}
+
 void ElfListModel::readElfHeader(int32_t fd, Elf32_Ehdr *elf_header)
 {
     assert(elf_header != NULL);
@@ -302,12 +307,14 @@ void ElfListModel::loadElfSectionHeader(int32_t fd, Elf32_Ehdr eh, Elf32_Shdr sh
     sh_str = readReadSection(fd, sh_table[eh.e_shstrndx]);
 
     qDebug("================================================================================");
+    log(QString("idx\toffset\tload-addr\tsize\talgn\tflags\ttype\tsection"));
     qDebug(" idx offset     load-addr  size       algn"         " flags      type       section\n");
     qDebug("================================================================================");
 
     for(i=0; i<eh.e_shnum; i++) {
         qDebug(" %03d 0x%08x 0x%08x 0x%08x %4d 0x%08x 0x%08x %s\t", i, sh_table[i].sh_offset, sh_table[i].sh_addr, sh_table[i].sh_size
                , sh_table[i].sh_addralign, sh_table[i].sh_flags, sh_table[i].sh_type, (sh_str + sh_table[i].sh_name));
+        log(QString("%1\t%2\t%3\t%4\t%5\t%6\t%7\t%8").arg(i).arg(sh_table[i].sh_offset).arg(sh_table[i].sh_addr).arg(sh_table[i].sh_size).arg(sh_table[i].sh_addralign).arg(sh_table[i].sh_flags).arg(sh_table[i].sh_type).arg((sh_str + sh_table[i].sh_name)));
     }
     qDebug("================================================================================");
 }
@@ -402,7 +409,7 @@ void ElfListModel::addElfFile(QString sPath, ElfFile *elfFile)
        elfFile->m_name = sPath;
 
        qDebug("The file %s has been open", qUtf8Printable(sPath));
-
+       log(QString("Loaded: %1").arg(sPath));
        readElfHeader(fd, &eh);
        loadElfHeader(eh, elfFile);
 
@@ -446,6 +453,10 @@ QVariant ElfListModel::data(const QModelIndex & index, int role) const {
         return elfFile->m_type;
     else if (role == MachineRole)
         return elfFile->m_machine;
+    else if (role == EntryRole)
+        return elfFile->m_entry;
+    else if (role == HsizeRole)
+        return elfFile->m_hsize;
     return QVariant();
 }
 
@@ -457,5 +468,7 @@ QHash<int, QByteArray> ElfListModel::roleNames() const {
     roles[AbiRole] = "abi";
     roles[TypeRole] = "type";
     roles[MachineRole] = "machine";
+    roles[EntryRole] = "entry";
+    roles[HsizeRole] = "hsize";
     return roles;
 }

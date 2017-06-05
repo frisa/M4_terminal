@@ -6,8 +6,8 @@ import QtQuick.Layouts 1.1
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 640
-    height: 480
+    width: 650
+    height: 550
     title: qsTr("M4 Terminal")
 
     signal loadClicked()
@@ -172,7 +172,7 @@ ApplicationWindow {
             ColumnLayout{
                 RowLayout{
                     Text{text: "ELF File"; color: "white"}
-                    ComboBox{model: elfModel; displayText: name}
+                    TextField{text: "/home/jan/Git/M4_bootloader/Debug/bootloader2.out"}
                     Button{text: "Browse"}
                     Button{text: "Load"
                     onClicked: applicationWindow.loadElfClicked()
@@ -180,21 +180,39 @@ ApplicationWindow {
                 }
                 Rectangle
                 {
-                    width: parent.width
-                    height: 300
+                    width: 650
+                    height: 200
                     ListView{
                         width: parent.width
                         height: 300
                         model: elfModel
                         delegate: Component{
                             Rectangle{
-                                Text{
-                                    color: "white"
-                                    text: "|" + name + "|" + abi + "|" + sclass + "|" + dformat
+                                color: "#263b44"
+                                width: 650
+                                height: 210
+                                Column{
+                                    Text{text: "Path: \t" + name; color: "white"}
+                                    Text{text: "SClass:\t" + sclass; color: "white"}
+                                    Text{text: "ABI:\t" + abi; color: "white"}
+                                    Text{text: "DFormat\t" + dformat; color: "white"}
+                                    Text{text: "Type\t" + type; color: "white"}
+                                    Text{text: "Machine\t" + machine; color: "white"}
+                                    Text{text: "Entry\t" + entry; color: "white"}
+                                    Text{text: "HSize\t" + hsize; color: "white"}
                                 }
                             }
                         }
-                }
+                    }
+               }
+               Rectangle{
+                   width: 650
+                   height: 500;
+                   color: "white"
+                   Text{
+                        objectName: "logWindow";
+                        text: "Loged info"
+                   }
                }
             }
         }

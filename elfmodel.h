@@ -53,8 +53,11 @@ public:
         SheaderSizeRole,
         FlagsRole,
     };
+    QString m_log;
 
     ElfListModel(QObject *parent = 0);
+
+    void log(QString message);
 
     void addFile(const ElfFile &file);
     void loadFile(QString sPath);
