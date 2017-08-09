@@ -32,6 +32,19 @@ ApplicationWindow {
                 height: 29
                 JxButton
                 {
+                    text: "File Browser"
+                    anchors.fill: parent
+                    onClicked: {
+                        mainStack.push(viewFileBrowser)
+                        console.log("show the file browser")
+                    }
+                }
+            }
+            Rectangle{
+                width: 80
+                height: 29
+                JxButton
+                {
                     text: "Load ELF file"
                     anchors.fill: parent
                     onClicked: {
@@ -97,22 +110,64 @@ ApplicationWindow {
         }
     }
     footer: Rectangle{
-            height: 30
-            color: "#bccad1"
-        }
+        height: 30
+        color: "#bccad1"
+    }
 
     StackView {
         id: mainStack
-        initialItem: viewElf
+        initialItem: viewFileBrowser
         anchors.fill: parent
     }
-
     ListModel{
         id: logModel
         ListElement{ name: "Tiva"}
         ListElement{ name: "noTiva"}
     }
 
+    Component{
+        id: fsListDelegate
+        Rectangle{
+            width: 100
+            height: 30
+            color: "blue"
+            Text{
+                text: name
+            }
+        }
+    }
+
+    ListModel{
+        id: fsModel
+        ListElement{
+             name: "Prvni"; cost: 9.95
+             attributes: [
+                        ListElement { description: "A" },
+                        ListElement { description: "B" }
+                        ]
+        }
+        ListElement{
+             name: "Druhy"; cost: 9.95
+             attributes: [
+                        ListElement { description: "C" },
+                        ListElement { description: "D" }
+                        ]
+        }
+    }
+
+    Component{
+        id: viewFileBrowser
+        Rectangle{
+            width: 100
+            height: 300
+            color: "red"
+            ListView{
+                height: parent.height
+                model: fsModel
+                delegate: fsListDelegate
+            }
+        }
+    }
     Component{
         id: viewSerial
         Rectangle{

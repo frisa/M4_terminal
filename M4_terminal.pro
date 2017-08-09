@@ -6,7 +6,8 @@ CONFIG += c++11
 SOURCES += main.cpp \
     solution.cpp \
     commanager.cpp \
-    elfmodel.cpp
+    elfmodel.cpp \
+    cfilesystemloader.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,6 +36,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     solution.h \
     commanager.h \
-    elfmodel.h
+    elfmodel.h \
+    cfilesystemloader.h
 
 DISTFILES +=
